@@ -41,8 +41,6 @@ def test_given_profile_when_format_profile_runs_return_formatted_profile():
         '/home/fede/Proyectos/memory_profiling_utilities/memory_profiling_utilities/profilers.py\t33\t18.8516 MiB\t18.8516 MiB\tdef second_method(self):',
         "/home/fede/Proyectos/memory_profiling_utilities/memory_profiling_utilities/profilers.py\t34\t18.8516 MiB\t0.0000 MiB\t    return 'two'"
     ]
-    print(*formatted_profile, sep = '\n')
-    print(*expected_formatted_profile, sep = '\n')
     assert formatted_profile == expected_formatted_profile
 
 def test_given_profiling_sequence_when_profile_generated_return_table():
@@ -53,7 +51,6 @@ def test_given_profiling_sequence_when_profile_generated_return_table():
         instance.first_method()
         instance.second_method()
     output_line = ' '.join(formatters.generate_profile_table(make_profile))
-    print(output_line)
     condition_1 = 'Filename\tLine #\tMem usage\tIncrement\tLine contents' in output_line
     condition_2 = 'MiB' in output_line
     condition_3 = '__init__' in output_line
