@@ -32,16 +32,3 @@ def generate_profile_table(profiling_function):
     sys.stdout = sys.__stdout__
     profile = buffer.getvalue()
     return format_profile(profile)
-
-
-
-profiler = profilers.make_class_profiler(profilers.ExampleClass)
-@profiler
-def make_profile():
-    instance = profilers.ExampleClass()
-    instance.first_method()
-    instance.second_method()
-
-
-out = generate_profile_table(make_profile)
-print(out)
