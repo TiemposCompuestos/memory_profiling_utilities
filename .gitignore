@@ -133,3 +133,6 @@ dmypy.json
 
 # mprofile data
 mprofile*.dat
+
+# Pipfile
+Pipfile
