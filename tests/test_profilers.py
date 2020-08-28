@@ -5,9 +5,10 @@ import memory_profiling_utilities.profilers as profilers
 import testable_items
 
 
-def test_given_testable_class_when_make_class_profler_runs_profile_all_methods(
-    capsys
-):
+### FIXTURES
+
+@pytest.fixture
+def complete_class_profiling():
     profiler = profilers.make_class_profiler(testable_items.ExampleClass)
     @profiler
     def profile_class():
@@ -15,15 +16,9 @@ def test_given_testable_class_when_make_class_profler_runs_profile_all_methods(
         instance.first_method()
         instance.second_method()
     profile_class()
-    profile = str(capsys.readouterr())
-    condition_1 = 'def __init__' in profile
-    condition_2 = 'def first_method' in profile
-    condition_3 = 'def second_method' in profile
-    assert condition_1 and condition_2 and condition_3
 
-def test_given_testable_class_and_empty_overriding_method_when_make_class_profler_runs_profile_all_methods(
-    capsys
-):
+@pytest.fixture
+def empty_overridden_class_profiling():
     profiler = profilers.make_class_profiler(
         testable_items.ExampleClass,
         overriding_patches = {'second_method': None}
@@ -34,15 +29,9 @@ def test_given_testable_class_and_empty_overriding_method_when_make_class_profle
         instance.first_method()
         instance.second_method()
     profile_class()
-    profile = str(capsys.readouterr())
-    condition_1 = 'def __init__' in profile
-    condition_2 = 'def first_method' in profile
-    condition_3 = 'def second_method' not in profile
-    assert condition_1 and condition_2 and condition_3
 
-def test_given_testable_class_and_alternative_overriding_method_when_make_class_profler_runs_profile_all_methods(
-    capsys
-):
+@pytest.fixture
+def overridden_method_class_profiling():
     def overriding_method(self):
         return 'overridden method'
     profiler = profilers.make_class_profiler(
@@ -55,9 +44,56 @@ def test_given_testable_class_and_alternative_overriding_method_when_make_class_
         instance.first_method()
         instance.second_method()
     profile_class()
+
+
+### TESTS
+
+def test_given_testable_class_when_make_class_profler_runs_profile_constructor(
+    capsys,
+    complete_class_profiling
+):
     profile = str(capsys.readouterr())
-    condition_1 = 'def __init__' in profile
-    condition_2 = 'def first_method' in profile
-    condition_3 = 'def second_method' not in profile
-    condition_4 = 'def overriding_method' in profile
-    assert condition_1 and condition_2 and condition_3 and condition_4
+    assert 'def __init__' in profile
+
+def test_given_testable_class_when_make_class_profler_runs_profile_first_method(
+    capsys,
+    complete_class_profiling
+):
+    profile = str(capsys.readouterr())
+    assert 'def first_method' in profile
+
+def test_given_testable_class_when_make_class_profler_runs_profile_second_method(
+    capsys,
+    complete_class_profiling
+):
+    profile = str(capsys.readouterr())
+    assert 'def second_method' in profile
+
+def test_given_testable_class_and_empty_overriding_method_when_make_class_profler_runs_profile_constructor(
+    capsys,
+    empty_overridden_class_profiling
+):
+    profile = str(capsys.readouterr())
+    assert 'def __init__' in profile
+
+def test_given_testable_class_and_empty_overriding_method_when_make_class_profler_runs_profile_first_method(
+    capsys,
+    empty_overridden_class_profiling
+):
+    profile = str(capsys.readouterr())
+    assert 'def first_method' in profile
+
+def test_given_testable_class_and_empty_overriding_method_when_make_class_profler_runs_dont_profile_second_method(
+    capsys,
+    empty_overridden_class_profiling
+):
+    profile = str(capsys.readouterr())
+    assert 'def second_method' not in profile
+
+def test_given_testable_class_and_alternative_overriding_method_when_make_class_profler_runs_profile_overridden_method(
+    capsys,
+    overridden_method_class_profiling
+):
+    
+    profile = str(capsys.readouterr())
+    assert 'def overriding_method' in profile

@@ -6,6 +6,22 @@ import memory_profiling_utilities.profilers as profilers
 import testable_items
 
 
+### FIXTURES
+
+@pytest.fixture
+def profile_output():
+    profiler = profilers.make_class_profiler(profilers.ExampleClass)
+    @profiler
+    def make_profile():
+        instance = profilers.ExampleClass()
+        instance.first_method()
+        instance.second_method()
+    output_line = ' '.join(formatters.generate_profile_table(make_profile))
+    return output_line
+
+
+### TESTS
+
 def test_given_profile_when_format_profile_runs_return_formatted_profile():
     profile = '\n'.join([
         'Filename: /home/fede/Proyectos/memory_profiling_utilities/memory_profiling_utilities/profilers.py',
@@ -43,18 +59,17 @@ def test_given_profile_when_format_profile_runs_return_formatted_profile():
     ]
     assert formatted_profile == expected_formatted_profile
 
-def test_given_profiling_sequence_when_profile_generated_return_table():
-    profiler = profilers.make_class_profiler(profilers.ExampleClass)
-    @profiler
-    def make_profile():
-        instance = profilers.ExampleClass()
-        instance.first_method()
-        instance.second_method()
-    output_line = ' '.join(formatters.generate_profile_table(make_profile))
-    condition_1 = 'Filename\tLine #\tMem usage\tIncrement\tLine contents' in output_line
-    condition_2 = 'MiB' in output_line
-    condition_3 = '__init__' in output_line
-    condition_4 = 'first_method' in output_line
-    condition_5 = 'second_method' in output_line
-    assert condition_1 and condition_2 and condition_3 and condition_4 and condition_5
+def test_given_profiling_sequence_when_profile_generated_return_table_with_correct_headers(profile_output):
+    assert 'Filename\tLine #\tMem usage\tIncrement\tLine contents' in profile_output
 
+def test_given_profiling_sequence_when_profile_generated_return_table_with_memory_usage_entries(profile_output):
+    assert 'MiB' in profile_output
+
+def test_given_profiling_sequence_when_profile_generated_return_table_with_constructor_profile(profile_output):
+    assert '__init__' in profile_output
+
+def test_given_profiling_sequence_when_profile_generated_return_table_with_first_method_profile(profile_output):
+    assert 'first_method' in profile_output
+
+def test_given_profiling_sequence_when_profile_generated_return_table_with_second_method_profile(profile_output):
+    assert 'second_method' in profile_output
