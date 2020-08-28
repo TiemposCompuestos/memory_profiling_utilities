@@ -15,8 +15,8 @@ long_description = open(os.path.join(rootdir, 'README.md')).read()
 # Build a list of all project modules
 packages = []
 for dirname, dirnames, filenames in os.walk(name):
-        if '__init__.py' in filenames:
-            packages.append(dirname.replace('/', '.'))
+    if '__init__.py' in filenames:
+        packages.append(dirname.replace('/', '.'))
 
 package_dir = {name: name}
 
