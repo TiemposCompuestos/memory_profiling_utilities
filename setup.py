@@ -21,7 +21,7 @@ for dirname, dirnames, filenames in os.walk(name):
 package_dir = {name: name}
 
 setup(
-    name = 'python-{}'.format(name),
+    name = name,
     description = 'a couple tools for memory profiling',
     long_description = long_description,
     url = 'https://github.com/TiemposCompuestos/memory_profiling_utilities',
