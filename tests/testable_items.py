@@ -2,7 +2,7 @@ class ExampleClass:
     def __init__(self):
         pass
     def first_method(self):
-            return 'method number 1'
+        return 'method number 1'
     def second_method(self):
         return 'two'
 

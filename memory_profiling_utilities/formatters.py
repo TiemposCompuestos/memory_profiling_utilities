@@ -13,8 +13,9 @@ def format_profile(profile):
         if 'Filename' in line:
             filename = re.sub('Filename: ', '', line)
         if 'MiB' in line:
-            data, code = line.split('       ')
-            _, line_n, mem_usage, mem_increment = re.sub('   +', '  ', data).split('  ')
+            no_indent_line = re.sub('^   +', '', line)
+            data, code = no_indent_line.split('       ')
+            line_n, mem_usage, mem_increment = re.sub('   +', '  ', data).split('  ')
             record = '{}\t{}\t{}\t{}\t{}'.format(
                 filename,
                 line_n,

@@ -10,12 +10,13 @@ import testable_items
 
 @pytest.fixture
 def profile_output():
-    profiler = profilers.make_class_profiler(profilers.ExampleClass)
+    profiler = profilers.make_class_profiler(testable_items.ExampleClass)
     @profiler
     def make_profile():
-        instance = profilers.ExampleClass()
+        instance = testable_items.ExampleClass()
         instance.first_method()
         instance.second_method()
+    make_profile()
     output_line = ' '.join(formatters.generate_profile_table(make_profile))
     return output_line
 

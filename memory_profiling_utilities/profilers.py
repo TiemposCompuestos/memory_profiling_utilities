@@ -24,11 +24,3 @@ def make_class_profiler(class_to_profile, overriding_patches = dict()):
     ]
     class_profiler = make_batch_patcher(class_patches + overridden_patches)
     return class_profiler
-
-class ExampleClass:
-    def __init__(self):
-        pass
-    def first_method(self):
-        return 'method number 1'
-    def second_method(self):
-        return 'two'
